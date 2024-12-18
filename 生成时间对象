@@ -1,4 +1,5 @@
 # 生成时间序列对象
+
 ##
 library(xts)
 sales<-c(18,33,41,7,34,35,24,25,24,21,25,20,22,31,40,29,25,21,22,54,31,25,26,35)
@@ -9,3 +10,18 @@ sales.xts<-xts(sales,date)
 sales.xts["2018"]
 ### 返回从2018年3月到2019年5月的所有数据
 sales.xts["2018-3/2019-5"]
+### 返回8个季度销售总量的时间序列
+quarterlies<-apply.quarterly(sales.xts,sum)
+quarterlies
+
+## 绘制时间序列图
+### 默认图形
+library(ggplot2)
+library(forecast)
+autoplot(sales.xts)
+### 定义颜色、更美观的标签和主题元素
+autoplot(sales.xts)+geom_line(color="blue")+
+     scale_x_date(date_breaks="1 months",date_labels="%b %y")+
+     labs(x="",y="Sales",title='Customized Time Series Plot')+
+     theme_bw()+
+     theme(axis.text.x=element_text(angle=90,vjust=0.5,hjust=1),panel.grid.minor.x=element_blank())
