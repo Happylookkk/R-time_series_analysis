@@ -1,0 +1,23 @@
+# 通过简单移动平均进行平滑处理
+## 时序数据的原始数据图、平滑后的图
+library(ggplot2)
+library(forecast)
+
+theme_set(theme_bw())
+ylim<-c(min(Nile),max(Nile))
+
+autoplot(Nile)+
+ggtitle(“Raw time series”)+
+scale_y_continuous(limits=ylim)
+
+autoplot(ma(Nile,3))+
+ggtitle(“Simple Moving Average (k=3)”)+
+scale_y_continuous(limits=ylim)
+
+autoplot(ma(Nile,7))+
+ggtitle(“simple Moving Average (k=7)”)+
+scale_y+continuous(limits=ylim)
+
+autoplot(ma(Nile,15))+
+ggtitle(“simple Moving Average (k=15)”)+
+scale_y+continuous(limits=ylim)
