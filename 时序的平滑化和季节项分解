@@ -1,4 +1,5 @@
 # 通过简单移动平均进行平滑处理
+
 ## 时序数据的原始数据图、平滑后的图
 library(ggplot2)
 library(forecast)
@@ -9,15 +10,30 @@ ylim<-c(min(Nile),max(Nile))
 autoplot(Nile)+
 ggtitle(“Raw time series”)+
 scale_y_continuous(limits=ylim)
-
+# k=3
 autoplot(ma(Nile,3))+
 ggtitle(“Simple Moving Average (k=3)”)+
 scale_y_continuous(limits=ylim)
-
+# k=7
 autoplot(ma(Nile,7))+
 ggtitle(“simple Moving Average (k=7)”)+
 scale_y+continuous(limits=ylim)
+# k=15
 
 autoplot(ma(Nile,15))+
 ggtitle(“simple Moving Average (k=15)”)+
 scale_y+continuous(limits=ylim)
+## 季节项分解
+library(ggplot2)
+library(forecast)
+autoplot(AirPassengers)
+### 对数变换
+AirPassengers1<-log(AirPassengers)
+autoplot(AirPassengers1,ylab="log(AirPassengers)")
+### 季节项分解，将季节项限定为每年都一样
+fit<-stl(AirPassengers1,s.window=”period”)
+autoplot(fit)
+### 返回对数变换后的时序
+fit$time.series
+# 将结果转化为原始尺度
+exp(fit$time$series)
