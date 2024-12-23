@@ -37,3 +37,17 @@ autoplot(fit)
 fit$time.series
 # 将结果转化为原始尺度
 exp(fit$time$series)
+
+通过forecast包提供的其它工具对季节项分解进行可视化（月度图和季节图）
+library(forecast)
+library(ggplot2)
+library(directlabels)
+# 月度图
+ggmonthplot(AirPassengers)+
+labs(title=”Month plot: AirPassengers”,x=””,y=”Passengers (thousands)”)
+# 季节图
+p<-ggseasonplot(AirPassengers)+
+geom_point()+
+labs(title=”Seasonal plot: AirPassengers”,x=””,y=”Passengers (thousands)”)
+direct.label(p)
+
