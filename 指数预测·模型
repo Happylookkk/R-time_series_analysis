@@ -28,7 +28,54 @@ p<-cbind(pred$mean,pred$lower,pred$upper)
 dimnames(p)[[2]]<-c("mean","Lo 80","Hi 80","Lo95","Hi 95")
 p
 
-# ets()函数和自动预测
+# ARIMA预测模型
+## 对Nile时序拟合ARIMA模型
+### 验证序列的平稳性
+library(forecast)
+library(tseries)
+ ### 1871年~1970年在阿斯旺地区测量的尼罗河的年流量时序图
+autoplot(Nile)
+ndiffs(Nile)
+ dNile<-diff(Nile)
+autoplot(dNile)
+### 被差分一次后的时序图，差分后原始图中下降的趋势被移除了
+adf.test(dNile)
+### 对差分后的时序做ADF检验，结果显示时序此时是平稳的，可以继续进行下一步
+## 选择模型
+### 通过ACF图和PACF图来选择备选模型
+autoplot(Acf(dNile))
+autoplot(Pacf(dNile))
+## 拟合模型
+###使用arima()函数拟合ARIMA模型：
+library(forecast)
+fit<-arima(Nile,order=c(0,1,1))
+fit
+accuracy(fit)
+## 模型评估
+library(ggplot2)
+### 提取残差
+df<-data.frame(resid=as.numeric(fit$residuals))
+### 创建Q-Q图
+ggplot(df,aes(sample=resid))+
+stat_qq()+
+stat_qq_line()+
+labs(title=”Normal Q-Q Plot”)
+### 检验所有滞后阶数的自相关系数是否为零
+Box.test(fit$residuals,type=”Ljung-Box”)
+## 预测
+### 用ARIMA模型做预测（forecast()函数）
+forecast(fit,3)
+autoplot(forecast(fit,3))+
+labs(x=”Year”,y=”Annual Flow”)
+### 用ARIMA(0,1,1)模型对Nile序列做接下来三年的预测。
+
+# ARIMA模型的自动预测（使用sunspots数据集）
+library(forecast)
+fit<-auto.arima(sunspots)
+fit
+forecast(fit,3) 
+accuracy(fit)
+## ets()函数和自动预测
 library(forecast)
 fit<-ets(JohnsonJohnson)
 fit
